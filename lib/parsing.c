@@ -3,7 +3,26 @@
 #include <math.h>
 // implement interpolation here
 int interpolation(uint16_t channel) {
-	// write interpolation code here
+	int interpolation(uint16_t channel) {
+    // Define the range for the SBUS channel value
+    const uint16_t sbus_min = 0;    // Minimum SBUS channel value
+    const uint16_t sbus_max = 2047; // Maximum SBUS channel value
+
+    // Define the range for the Sabertooth motor driver
+    const uint8_t sabertooth_min = 0;  // Minimum Sabertooth value
+    const uint8_t sabertooth_max = 255; // Maximum Sabertooth value
+
+    // Ensure the channel value is within the expected SBUS range
+    if (channel < sbus_min) channel = sbus_min;
+    if (channel > sbus_max) channel = sbus_max;
+
+    // Interpolate the SBUS value to the Sabertooth range
+    int interpolated_value = (channel - sbus_min) * (sabertooth_max - sabertooth_min) / (sbus_max - sbus_min) + sabertooth_min;
+
+    // Return the interpolated value as an integer
+    return interpolated_value;
+}
+
 }
 // creating 11 bit channel
 uint16_t *parse_buffer(uint8_t buff[]) { 
