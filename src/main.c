@@ -1,41 +1,42 @@
 #include <stdint.h>
-#include <stdio.h>
-#include <serial.h>
-#include <parsing.h>
+#include "uart.h"
+#include "parsing.h"
 
-int main(int argc, char** argv) {
-	char *port_name_1 = argv[1]; // SBUS 
-	char *port_name_2 = argv[2]; // Sabertooth1
+// Function prototypes
+void uart_init(void);
+void uart_send(uint8_t data);
+void read_sbus_data(uint8_t buffer[]);
 
-	FILE *sbus; 
-	FILE *sabertooth;
+int main(void) {
+    // Initialize UART and SBUS receiver
+    uart_init();
+    sbus_receiver_init(); // Implement this function for your hardware
 
-	// to store sbus packets
-	uint8_t sbus_packet[15];
+    // Main loop
+    while (1) {
+        uint8_t sbus_buffer[25]; // Adjust size as per your SBUS protocol
+        
+        // Read data from SBUS receiver
+        read_sbus_data(sbus_buffer);
+        
+        // Process SBUS data to control the motor
+        process_sbus_data(sbus_buffer);
+    }
+    
+    return 0;
+}
 
-	// to store value of indiviual RC channel
-	uint16_t *channel;
+// UART initialization
+void uart_init(void) {
+    // Initialize UART hardware (baud rate, data bits, etc.)
+}
 
-	// pwm value after interpolation 
-	int pwm;
+// UART data send
+void uart_send(uint8_t data) {
+    // Send a byte through UART
+}
 
-	// opening serial port for serial communication with Sabertooth and SBUS
-	sbus = open_file(port_name_1, "rb");
-	sabertooth = open_file(port_name_2, "w+");
-	
-	// read data from RC transmitter using sbus
-	read_SBUS(sbus_packet, uint8_t, 25, sbus);
-
-	// parsing sbus packet
-	channel = parse_buffer(sbus_packet);
-
-	// get pwm range for Sabertooth 1			 
-	pwm = interpolation(channel[0]);		//  write								
-							//  to
-	// write data to Sabertooth 1			//  sabertooth	
-	write_to_SB(sabertooth, "%d", pwm);		
-
-	// closing all serial port 
-	close_file(sbus);
-	close_file(sabertooth);
+// SBUS data reading (Placeholder)
+void read_sbus_data(uint8_t buffer[]) {
+    // Read data from SBUS receiver and fill the buffer
 }
